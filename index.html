@@ -629,10 +629,10 @@ function updateProgress() {
 document.getElementById('appForm').addEventListener('input', updateProgress);
 document.getElementById('appForm').addEventListener('change', updateProgress);
 
-const FORMSPREE_URL = 'https://formspree.io/f/xjgjwazn';
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbw1WvGoTOCGh8pteJ560M1s0ErxXecuw8BQuPwSAVIxBjwjutTF3i8Pf4THt8O6K9U/exec';
 
 // ── Form submission ──────────────────────────────────
-document.getElementById('appForm').addEventListener('submit', async function(e) {
+document.getElementById('appForm').addEventListener('submit', function(e) {
   e.preventDefault();
 
   const emailEl  = document.getElementById('q_email');
@@ -649,15 +649,7 @@ document.getElementById('appForm').addEventListener('submit', async function(e) 
 
   const data = collectFormData();
 
-  try {
-    await fetch(FORMSPREE_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(data),
-    });
-  } catch(err) {
-    console.error('Submission error:', err);
-  }
+  new Image().src = SHEETS_URL + '?data=' + encodeURIComponent(JSON.stringify(data));
 
   submitBtn.disabled = false;
   submitBtn.textContent = 'Submit Application';
