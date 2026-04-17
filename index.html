@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Wings for Growth — Program Application</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --orange-primary: #E8764E;
+    --orange-dark:    #C95F35;
+    --orange-light:   #F5A070;
+    --teal-dark:      #1B3040;
+    --teal-mid:       #244356;
+    --teal-accent:    #2E5870;
+    --cream:          #F7F5F2;
+    --text-dark:      #1A1A2A;
+    --text-mid:       #4A5568;
+    --text-light:     #718096;
+    --border:         #DDD8D0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    min-height: 100vh;
+  }
+
+  /* ── Left panel ─────────────────────────────── */
+  .left-panel {
+    background: #fff;
+    border-right: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ── Form panel ─────────────────────────────── */
+  .form-panel { background: var(--cream); }
+
+  /* ── Typography ─────────────────────────────── */
+  h1, h2 { font-family: 'Playfair Display', serif; }
+  .form-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 2.5vw, 2rem);
+    font-weight: 500;
+    color: var(--text-dark);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+  }
+  .form-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-mid);
+    line-height: 1.7;
+    margin-top: 0.5rem;
+  }
+
+  /* ── Section headers ────────────────────────── */
+  .section-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--orange-primary);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--border), transparent);
+  }
+
+  /* ── Form fields ────────────────────────────── */
+  .field-group { display: flex; flex-direction: column; gap: 0.35rem; }
+  .field-label {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text-dark);
+  }
+  .field-label .req { color: var(--orange-primary); margin-left: 2px; }
+  .field-label .hint {
+    display: block;
+    font-weight: 400;
+    font-size: 0.76rem;
+    color: var(--text-light);
+    margin-top: 1px;
+    line-height: 1.5;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="url"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    color: var(--text-dark);
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    line-height: 1.5;
+  }
+  input::placeholder, textarea::placeholder { color: #B0A99F; }
+  input:focus, textarea:focus, select:focus {
+    border-color: var(--orange-primary);
+    box-shadow: 0 0 0 3px rgba(232,118,78,0.12);
+  }
+  textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+  select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23718096' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.85rem center; padding-right: 2.2rem; }
+
+  /* ── Radio/Checkbox groups ──────────────────── */
+  .choice-group { display: flex; flex-direction: column; gap: 0.5rem; }
+  .choice-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.6rem 0.85rem;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .choice-item:hover { border-color: var(--orange-light); background: #FFF9F6; }
+  .choice-item input[type="radio"],
+  .choice-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    margin-top: 1px;
+    accent-color: var(--orange-primary);
+    cursor: pointer;
+    padding: 0;
+    border: none;
+    background: none;
+    box-shadow: none;
+  }
+  .choice-item input:focus { box-shadow: none; border: none; }
+  .choice-item.selected {
+    border-color: var(--orange-primary);
+    background: #FFF5F0;
+  }
+  .choice-label {
+    font-size: 0.875rem;
+    color: var(--text-dark);
+    line-height: 1.5;
+  }
+
+  /* ── CTA button ─────────────────────────────── */
+  .btn-submit {
+    width: 100%;
+    padding: 0.85rem 2rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: #fff;
+    background: linear-gradient(135deg, var(--orange-primary) 0%, #D4612E 100%);
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: opacity 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+    box-shadow: 0 4px 14px rgba(232,118,78,0.35), 0 1px 3px rgba(0,0,0,0.1);
+  }
+  .btn-submit:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(232,118,78,0.4), 0 2px 6px rgba(0,0,0,0.12);
+  }
+  .btn-submit:active { transform: translateY(0); opacity: 1; }
+  .btn-submit:focus-visible { outline: 3px solid var(--orange-light); outline-offset: 2px; }
+
+  /* ── Progress bar ───────────────────────────── */
+  .progress-wrap { background: rgba(255,255,255,0.25); border-radius: 99px; height: 4px; overflow: hidden; }
+  .progress-bar { height: 100%; border-radius: 99px; background: linear-gradient(to right, var(--orange-light), var(--orange-primary)); transition: width 0.4s ease; }
+
+  /* ── Success state ──────────────────────────── */
+  .success-screen { display: none; }
+  .success-screen.visible { display: flex; }
+
+  /* ── Admin download bar ─────────────────────── */
+  #adminBar {
+    display: none;
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 50;
+  }
+  .admin-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: var(--teal-dark);
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    transition: background 0.15s ease;
+  }
+  .admin-btn:hover { background: var(--teal-accent); }
+
+  /* ── Responsive ─────────────────────────────── */
+  @media (max-width: 768px) {
+    .left-panel { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Admin download bar (shown when ?admin in URL) -->
+<div id="adminBar">
+  <button class="admin-btn" onclick="downloadCSV()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Download Excel (CSV)
+    <span id="subCount" style="background:var(--orange-primary);border-radius:99px;padding:1px 7px;font-size:0.72rem;"></span>
+  </button>
+</div>
+
+<div class="flex min-h-screen">
+
+  <!-- ── LEFT PANEL ── -->
+  <div class="left-panel hidden md:flex flex-col justify-between w-[42%] lg:w-[38%] xl:w-[36%] sticky top-0 h-screen" style="padding:0; background:#000;">
+    <!-- Full-bleed photo -->
+    <img src="brand_assets/Group Pic (3).jpg" alt="Wings for Growth community" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;display:block;" />
+    <!-- Gradient overlay for readability -->
+    <div style="position:absolute;inset:0;background:linear-gradient(to bottom, rgba(0,0,0,0.52) 0%, rgba(0,0,0,0.1) 45%, rgba(0,0,0,0.55) 100%);"></div>
+
+    <!-- Logo top -->
+    <div style="position:relative;z-index:10;padding:2.5rem 2.5rem 0;">
+      <img src="brand_assets/wings-primary-logo.png" alt="Wings for Growth" style="height:52px;width:auto;object-fit:contain;" />
+    </div>
+
+    <!-- Progress + tagline bottom -->
+    <div style="position:relative;z-index:10;padding:0 2.5rem 2.5rem;">
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.4rem,2vw,1.8rem);font-weight:400;color:#fff;line-height:1.3;letter-spacing:-0.02em;margin-bottom:0.6rem;">
+        Start Your<br /><span style="color:var(--orange-light);font-weight:600;">WINGS Journey</span>
+      </h2>
+      <p style="font-size:0.82rem;color:rgba(255,255,255,0.7);line-height:1.65;margin-bottom:1.25rem;">
+        Apply to join a structured mentorship ecosystem designed to help you grow as a leader, gain clarity, and accelerate your career.
+      </p>
+      <div class="progress-wrap" style="margin-bottom:0.4rem;">
+        <div class="progress-bar" id="leftProgress" style="width:0%"></div>
+      </div>
+      <p id="leftProgressLabel" style="font-size:0.72rem;color:rgba(255,255,255,0.5);">0 of 29 answered</p>
+    </div>
+  </div>
+
+  <!-- ── RIGHT FORM PANEL ── -->
+  <div class="form-panel flex-1 overflow-y-auto">
+    <!-- Mobile logo -->
+    <div class="md:hidden flex justify-center pt-8 pb-4 px-6">
+      <img src="brand_assets/wings-primary-logo.png" alt="Wings for Growth" class="h-12 w-auto object-contain"  />
+    </div>
+
+    <!-- FORM -->
+    <form id="appForm" class="max-w-2xl mx-auto px-6 py-10 xl:py-14" novalidate>
+
+      <div class="mb-10">
+        <h1 class="form-title">Program Application</h1>
+        <p class="form-subtitle">Apply to join a structured mentorship ecosystem designed to help you grow as a leader, gain clarity, and accelerate your career.</p>
+      </div>
+
+      <!-- ── SECTION 1: Personal Info ── -->
+      <div class="mb-8">
+        <div class="section-label">Personal Information</div>
+        <div class="flex flex-col gap-5">
+
+          <div class="field-group">
+            <label class="field-label" for="q_email">Email Address <span class="req">*</span></label>
+            <input type="email" id="q_email" name="email" placeholder="Enter your email address" required />
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="field-group">
+              <label class="field-label" for="q_first">First Name <span class="req">*</span></label>
+              <input type="text" id="q_first" name="first_name" placeholder="Your first name" required />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="q_last">Last Name <span class="req">*</span></label>
+              <input type="text" id="q_last" name="last_name" placeholder="Your last name" required />
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="q_phone">Phone Number</label>
+            <input type="tel" id="q_phone" name="phone" placeholder="+1 (555) 000-0000" />
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="q_linkedin">LinkedIn Profile</label>
+            <input type="url" id="q_linkedin" name="linkedin" placeholder="https://linkedin.com/in/yourprofile" />
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="q_location">Location</label>
+            <input type="text" id="q_location" name="location" placeholder="City, Country" />
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="q_role">Current Role and Occupation</label>
+            <input type="text" id="q_role" name="current_role" placeholder="e.g. Senior Manager, Tech Industry" />
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="q_industry">Job Industry</label>
+            <input type="text" id="q_industry" name="job_industry" placeholder="e.g. Finance, Healthcare, Technology" />
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── SECTION 2: Growth Mindset ── -->
+      <div class="mb-8">
+        <div class="section-label">Your Growth Journey</div>
+        <div class="flex flex-col gap-5">
+
+          <div class="field-group">
+            <label class="field-label" for="q9">
+              What moment or realization made you decide that now is the time to invest in your growth?
+            </label>
+            <textarea id="q9" name="q9_growth_moment" placeholder="Share the moment or realization that brought you here..."></textarea>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="q10">
+              What work or cause makes you feel most fulfilled?
+            </label>
+            <textarea id="q10" name="q10_fulfillment" placeholder="Describe what energizes and fulfills you most..."></textarea>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="q13">
+              What recurring challenge or pattern are you ready to break in this next chapter?
+            </label>
+            <textarea id="q13" name="q13_challenge" placeholder="Describe the pattern or challenge you're ready to move past..."></textarea>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="q14">
+              What recent feedback revealed something important about your strengths or blind spots?
+            </label>
+            <textarea id="q14" name="q14_feedback" placeholder="Share feedback that gave you a new perspective..."></textarea>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="q15">
+              What opportunity feels slightly out of reach — but deeply aligned with who you want to become?
+            </label>
+            <textarea id="q15" name="q15_opportunity" placeholder="Describe the opportunity you're reaching toward..."></textarea>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="q16">
+              How has mentorship shaped you — as a mentor, mentee, or both?
+            </label>
+            <textarea id="q16" name="q16_mentorship" placeholder="Reflect on how mentorship has played a role in your journey..."></textarea>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── SECTION 3: Leadership Skills ── -->
+      <div class="mb-8">
+        <div class="section-label">Leadership Development</div>
+        <div class="flex flex-col gap-5">
+
+          <div class="field-group">
+            <label class="field-label" for="q12">
+              Which leadership skill would create the biggest breakthrough for you right now?
+            </label>
+            <select id="q12" name="q12_leadership_skill">
+              <option value="" disabled selected>Select a leadership skill...</option>
+              <option>Executive Presence</option>
+              <option>Personal Brand</option>
+              <option>Storytelling</option>
+              <option>Extraordinary Confidence to Show Up</option>
+              <option>Building an Impactful Network</option>
+              <option>Navigating Careers</option>
+              <option>Communicate with Influence</option>
+              <option>Manage Conflict</option>
+              <option>Lead with Authenticity</option>
+              <option>Leading through Change</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">
+              Are you willing to be a Mentor post this program?
+            </label>
+            <div class="choice-group" id="q17Group">
+              <label class="choice-item" onclick="selectChoice(this,'q17Group')">
+                <input type="radio" name="q17_mentor" value="Yes" />
+                <span class="choice-label">Yes</span>
+              </label>
+              <label class="choice-item" onclick="selectChoice(this,'q17Group')">
+                <input type="radio" name="q17_mentor" value="No" />
+                <span class="choice-label">No</span>
+              </label>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── SECTION 4: Trusted Advisors ── -->
+      <div class="mb-8">
+        <div class="section-label">Your Trusted Advisors</div>
+        <div class="flex flex-col gap-6">
+
+          <!-- Advisor 1 -->
+          <div class="flex flex-col gap-4 p-5 rounded-xl" style="background:rgba(232,118,78,0.04); border:1px solid rgba(232,118,78,0.15);">
+            <p class="text-xs font-semibold uppercase tracking-widest" style="color:var(--orange-primary);">Trusted Advisor #1</p>
+            <p class="text-xs text-gray-500 -mt-2 leading-relaxed">A mentor, manager, or leader who understands your aspirations and is invested in your growth.</p>
+            <div class="field-group">
+              <label class="field-label" for="q18">Name</label>
+              <input type="text" id="q18" name="advisor1_name" placeholder="Full name" />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="q19">Email Address</label>
+              <input type="email" id="q19" name="advisor1_email" placeholder="their@email.com" />
+            </div>
+          </div>
+
+          <!-- Advisor 2 -->
+          <div class="flex flex-col gap-4 p-5 rounded-xl" style="background:rgba(232,118,78,0.04); border:1px solid rgba(232,118,78,0.15);">
+            <p class="text-xs font-semibold uppercase tracking-widest" style="color:var(--orange-primary);">Trusted Advisor #2</p>
+            <p class="text-xs text-gray-500 -mt-2 leading-relaxed">Someone in your circle (friend or colleague) who believes in your potential and is ready to support you through this transformational journey.</p>
+            <div class="field-group">
+              <label class="field-label" for="q20">Name</label>
+              <input type="text" id="q20" name="advisor2_name" placeholder="Full name" />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="q21">Email Address</label>
+              <input type="email" id="q21" name="advisor2_email" placeholder="their@email.com" />
+            </div>
+          </div>
+
+          <!-- Advisor 3 -->
+          <div class="flex flex-col gap-4 p-5 rounded-xl" style="background:rgba(232,118,78,0.04); border:1px solid rgba(232,118,78,0.15);">
+            <p class="text-xs font-semibold uppercase tracking-widest" style="color:var(--orange-primary);">Trusted Advisor #3</p>
+            <p class="text-xs text-gray-500 -mt-2 leading-relaxed">A trusted voice in your life who can champion your goals and walk alongside you as you evolve.</p>
+            <div class="field-group">
+              <label class="field-label" for="q22">Name</label>
+              <input type="text" id="q22" name="advisor3_name" placeholder="Full name" />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="q23">Email Address</label>
+              <input type="email" id="q23" name="advisor3_email" placeholder="their@email.com" />
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── SECTION 5: Commitment ── -->
+      <div class="mb-8">
+        <div class="section-label">Commitment &amp; Sponsorship</div>
+        <div class="flex flex-col gap-5">
+
+          <div class="field-group">
+            <label class="field-label">Who is sponsoring your participation?</label>
+            <div class="choice-group" id="q24Group">
+              <label class="choice-item" onclick="selectChoice(this,'q24Group')">
+                <input type="radio" name="q24_sponsor" value="Yes, I am sponsoring myself" />
+                <span class="choice-label">Yes, I am sponsoring myself</span>
+              </label>
+              <label class="choice-item" onclick="selectChoice(this,'q24Group')">
+                <input type="radio" name="q24_sponsor" value="My company is sponsoring me" />
+                <span class="choice-label">My company is sponsoring me</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Have you followed us on LinkedIn, Instagram and Facebook?</label>
+            <div class="choice-group" id="q25Group">
+              <label class="choice-item" onclick="selectChoice(this,'q25Group')">
+                <input type="radio" name="q25_social" value="Yes" />
+                <span class="choice-label">Yes</span>
+              </label>
+              <label class="choice-item" onclick="selectChoice(this,'q25Group')">
+                <input type="radio" name="q25_social" value="No" />
+                <span class="choice-label">No</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">
+              This program is nonrefundable and all fees are due before the program starts. Are you comfortable with this model?
+            </label>
+            <div class="choice-group" id="q26Group">
+              <label class="choice-item" onclick="selectChoice(this,'q26Group')">
+                <input type="radio" name="q26_nonrefund" value="Yes" />
+                <span class="choice-label">Yes</span>
+              </label>
+              <label class="choice-item" onclick="selectChoice(this,'q26Group')">
+                <input type="radio" name="q26_nonrefund" value="No" />
+                <span class="choice-label">No</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">
+              Are you comfortable learning in a group environment that values honesty and vulnerability?
+            </label>
+            <div class="choice-group" id="q27Group">
+              <label class="choice-item" onclick="selectChoice(this,'q27Group')">
+                <input type="radio" name="q27_group" value="Yes" />
+                <span class="choice-label">Yes</span>
+              </label>
+              <label class="choice-item" onclick="selectChoice(this,'q27Group')">
+                <input type="radio" name="q27_group" value="No" />
+                <span class="choice-label">No</span>
+              </label>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── SECTION 6: Referral ── -->
+      <div class="mb-10">
+        <div class="section-label">Referral</div>
+        <div class="flex flex-col gap-5">
+
+          <div class="field-group">
+            <label class="field-label" for="q28">
+              Referral — Person who referred you
+              <span class="hint">So we can thank them!</span>
+            </label>
+            <input type="text" id="q28" name="referral_name" placeholder="Their full name" />
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="q29">Referral Email</label>
+            <input type="email" id="q29" name="referral_email" placeholder="referral@email.com" />
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── Submit ── -->
+      <div class="flex flex-col gap-3">
+        <button type="submit" class="btn-submit">Submit Application</button>
+        <p class="text-center text-xs" style="color:var(--text-light);">
+          Your information is kept confidential and used solely for program purposes.
+        </p>
+      </div>
+
+    </form>
+
+    <!-- ── SUCCESS SCREEN ── -->
+    <div id="successScreen" class="success-screen flex-col items-center justify-center min-h-screen px-6 py-16 text-center max-w-md mx-auto">
+      <div class="mb-6">
+        <img src="brand_assets/wings-primary-logo.png" alt="Wings for Growth" class="h-14 w-auto object-contain mx-auto"  />
+      </div>
+      <div class="w-16 h-16 rounded-full flex items-center justify-center mb-6 mx-auto" style="background:linear-gradient(135deg,var(--orange-primary),var(--orange-dark));">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2 class="form-title mb-3">Application Submitted!</h2>
+      <p class="form-subtitle mb-8">Thank you for applying. Our team will review your application and be in touch soon. We're excited to be part of your growth journey.</p>
+      <button onclick="resetForm()" class="btn-submit" style="max-width:280px; margin:0 auto;">Submit Another Response</button>
+    </div>
+
+  </div><!-- end form-panel -->
+</div><!-- end flex -->
+
+<script>
+// ── Radio/checkbox selection highlight ──────────────
+function selectChoice(el, groupId) {
+  document.querySelectorAll('#' + groupId + ' .choice-item').forEach(i => i.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ── Progress tracking ────────────────────────────────
+const TOTAL_QUESTIONS = 29;
+
+function countAnswered() {
+  const form = document.getElementById('appForm');
+  let answered = 0;
+
+  const textFields = ['q_email','q_first','q_last','q_phone','q_linkedin','q_location',
+    'q_role','q_industry','q9','q10','q13','q14','q15','q16','q12',
+    'q18','q19','q20','q21','q22','q23','q28','q29'];
+  textFields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.value.trim()) answered++;
+  });
+
+  const radioGroups = ['q17_mentor','q24_sponsor','q25_social','q26_nonrefund','q27_group','q11_placeholder'];
+  ['q17_mentor','q24_sponsor','q25_social','q26_nonrefund','q27_group'].forEach(name => {
+    if (form.querySelector(`input[name="${name}"]:checked`)) answered++;
+  });
+
+  return Math.min(answered, TOTAL_QUESTIONS);
+}
+
+function updateProgress() {
+  const n = countAnswered();
+  const pct = Math.round((n / TOTAL_QUESTIONS) * 100);
+  const bar = document.getElementById('leftProgress');
+  const lbl = document.getElementById('leftProgressLabel');
+  if (bar) bar.style.width = pct + '%';
+  if (lbl) lbl.textContent = n + ' of ' + TOTAL_QUESTIONS + ' answered';
+}
+
+document.getElementById('appForm').addEventListener('input', updateProgress);
+document.getElementById('appForm').addEventListener('change', updateProgress);
+
+// ── Form submission ──────────────────────────────────
+document.getElementById('appForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const emailEl = document.getElementById('q_email');
+  const firstEl = document.getElementById('q_first');
+  const lastEl  = document.getElementById('q_last');
+
+  if (!emailEl.value.trim()) { emailEl.focus(); emailEl.style.borderColor='var(--orange-primary)'; return; }
+  if (!firstEl.value.trim()) { firstEl.focus(); firstEl.style.borderColor='var(--orange-primary)'; return; }
+  if (!lastEl.value.trim())  { lastEl.focus();  lastEl.style.borderColor='var(--orange-primary)'; return; }
+
+  const data = collectFormData();
+  saveSubmission(data);
+  showSuccess();
+});
+
+function collectFormData() {
+  const f = id => (document.getElementById(id) ? document.getElementById(id).value.trim() : '');
+  const r = name => {
+    const el = document.querySelector(`input[name="${name}"]:checked`);
+    return el ? el.value : '';
+  };
+  return {
+    'Submitted At':             new Date().toLocaleString(),
+    'Email':                    f('q_email'),
+    'First Name':               f('q_first'),
+    'Last Name':                f('q_last'),
+    'Phone Number':             f('q_phone'),
+    'LinkedIn Profile':         f('q_linkedin'),
+    'Location':                 f('q_location'),
+    'Current Role and Occupation': f('q_role'),
+    'Job Industry':             f('q_industry'),
+    'Growth Moment':            f('q9'),
+    'Most Fulfilled By':        f('q10'),
+    'Recurring Challenge':      f('q13'),
+    'Recent Feedback':          f('q14'),
+    'Opportunity Out of Reach': f('q15'),
+    'Mentorship Experience':    f('q16'),
+    'Leadership Skill':         f('q12'),
+    'Willing to Mentor':        r('q17_mentor'),
+    'Advisor 1 Name':           f('q18'),
+    'Advisor 1 Email':          f('q19'),
+    'Advisor 2 Name':           f('q20'),
+    'Advisor 2 Email':          f('q21'),
+    'Advisor 3 Name':           f('q22'),
+    'Advisor 3 Email':          f('q23'),
+    'Sponsorship':              r('q24_sponsor'),
+    'Followed on Social Media': r('q25_social'),
+    'Nonrefundable Comfortable':r('q26_nonrefund'),
+    'Group Learning Comfortable':r('q27_group'),
+    'Referral Name':            f('q28'),
+    'Referral Email':           f('q29'),
+  };
+}
+
+// ── LocalStorage persistence ─────────────────────────
+function saveSubmission(data) {
+  const key = 'wfg_submissions';
+  const all = JSON.parse(localStorage.getItem(key) || '[]');
+  all.push(data);
+  localStorage.setItem(key, JSON.stringify(all));
+}
+
+// ── CSV download ─────────────────────────────────────
+function downloadCSV() {
+  const key = 'wfg_submissions';
+  const all = JSON.parse(localStorage.getItem(key) || '[]');
+  if (!all.length) { alert('No submissions yet.'); return; }
+
+  const headers = Object.keys(all[0]);
+  const escape  = v => '"' + String(v).replace(/"/g,'""') + '"';
+  const rows    = all.map(row => headers.map(h => escape(row[h] || '')).join(','));
+  const csv     = [headers.map(escape).join(','), ...rows].join('\r\n');
+
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'wings-applications-' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── Show/hide success ────────────────────────────────
+function showSuccess() {
+  document.getElementById('appForm').style.display    = 'none';
+  const s = document.getElementById('successScreen');
+  s.style.display = 'flex';
+}
+
+function resetForm() {
+  document.getElementById('appForm').reset();
+  document.querySelectorAll('.choice-item').forEach(i => i.classList.remove('selected'));
+  document.getElementById('appForm').style.display = '';
+  const s = document.getElementById('successScreen');
+  s.style.display = 'none';
+  updateProgress();
+  window.scrollTo(0,0);
+}
+
+// ── Admin bar ────────────────────────────────────────
+(function() {
+  if (window.location.search.includes('admin')) {
+    const bar = document.getElementById('adminBar');
+    bar.style.display = 'block';
+    const count = document.getElementById('subCount');
+    const all = JSON.parse(localStorage.getItem('wfg_submissions') || '[]');
+    count.textContent = all.length;
+  }
+})();
+</script>
+</body>
+</html>
