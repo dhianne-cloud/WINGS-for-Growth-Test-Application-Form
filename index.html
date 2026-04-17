@@ -265,11 +265,6 @@
   </div>
 
   <!-- ── RIGHT FORM PANEL ── -->
-  <!-- Hidden iframe + form for Google Sheets submission -->
-  <iframe name="hidden_iframe" style="display:none;"></iframe>
-  <form id="gSheetForm" method="POST" action="https://script.google.com/macros/s/AKfycbw1WvGoTOCGh8pteJ560M1s0ErxXecuw8BQuPwSAVIxBjwjutTF3i8Pf4THt8O6K9U/exec" target="hidden_iframe" style="display:none;">
-    <input type="hidden" name="data" id="gSheetData" />
-  </form>
 
   <div class="form-panel flex-1 overflow-y-auto">
     <!-- Mobile logo -->
@@ -634,10 +629,10 @@ function updateProgress() {
 document.getElementById('appForm').addEventListener('input', updateProgress);
 document.getElementById('appForm').addEventListener('change', updateProgress);
 
-const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbw1WvGoTOCGh8pteJ560M1s0ErxXecuw8BQuPwSAVIxBjwjutTF3i8Pf4THt8O6K9U/exec';
+const FORMSPREE_URL = 'https://formspree.io/f/xjgjwazn';
 
 // ── Form submission ──────────────────────────────────
-document.getElementById('appForm').addEventListener('submit', function(e) {
+document.getElementById('appForm').addEventListener('submit', async function(e) {
   e.preventDefault();
 
   const emailEl  = document.getElementById('q_email');
@@ -654,8 +649,15 @@ document.getElementById('appForm').addEventListener('submit', function(e) {
 
   const data = collectFormData();
 
-  document.getElementById('gSheetData').value = JSON.stringify(data);
-  document.getElementById('gSheetForm').submit();
+  try {
+    await fetch(FORMSPREE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(data),
+    });
+  } catch(err) {
+    console.error('Submission error:', err);
+  }
 
   submitBtn.disabled = false;
   submitBtn.textContent = 'Submit Application';
