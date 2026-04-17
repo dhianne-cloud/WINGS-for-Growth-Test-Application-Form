@@ -628,20 +628,39 @@ function updateProgress() {
 document.getElementById('appForm').addEventListener('input', updateProgress);
 document.getElementById('appForm').addEventListener('change', updateProgress);
 
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbw1WvGoTOCGh8pteJ560M1s0ErxXecuw8BQuPwSAVIxBjwjutTF3i8Pf4THt8O6K9U/exec';
+
 // ── Form submission ──────────────────────────────────
-document.getElementById('appForm').addEventListener('submit', function(e) {
+document.getElementById('appForm').addEventListener('submit', async function(e) {
   e.preventDefault();
 
-  const emailEl = document.getElementById('q_email');
-  const firstEl = document.getElementById('q_first');
-  const lastEl  = document.getElementById('q_last');
+  const emailEl  = document.getElementById('q_email');
+  const firstEl  = document.getElementById('q_first');
+  const lastEl   = document.getElementById('q_last');
+  const submitBtn = document.querySelector('.btn-submit');
 
   if (!emailEl.value.trim()) { emailEl.focus(); emailEl.style.borderColor='var(--orange-primary)'; return; }
   if (!firstEl.value.trim()) { firstEl.focus(); firstEl.style.borderColor='var(--orange-primary)'; return; }
   if (!lastEl.value.trim())  { lastEl.focus();  lastEl.style.borderColor='var(--orange-primary)'; return; }
 
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting…';
+
   const data = collectFormData();
-  saveSubmission(data);
+
+  try {
+    await fetch(SHEETS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+  } catch (err) {
+    console.error('Sheets error:', err);
+  }
+
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'Submit Application';
   showSuccess();
 });
 
