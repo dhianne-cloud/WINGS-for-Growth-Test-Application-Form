@@ -649,11 +649,12 @@ document.getElementById('appForm').addEventListener('submit', async function(e) 
   const data = collectFormData();
 
   try {
+    const formData = new FormData();
+    formData.append('data', JSON.stringify(data));
     await fetch(SHEETS_URL, {
       method: 'POST',
       mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+      body: formData,
     });
   } catch (err) {
     console.error('Sheets error:', err);
